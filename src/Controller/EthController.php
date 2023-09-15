@@ -75,14 +75,15 @@ class EthController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_eth_delete', methods: ['POST'])]
-    public function delete(Request $request, Eth $eth, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}', name: 'app_eth_delete', methods: ['DELETE'])]
+    public function deleteAPI($id, EthRepository $ethRepository, Request $request, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$eth->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($eth);
-            $entityManager->flush();
-        }
+        $eth = $ethRepository->find($id);
 
-        return $this->redirectToRoute('app_eth_index', [], Response::HTTP_SEE_OTHER);
+        $entityManager->remove($eth);
+        $entityManager->flush();
+
+
+        return new Response('Il est supprimer !!');
     }
 }
