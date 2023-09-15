@@ -1,0 +1,4 @@
+App\Entity\Subcategory:
+  subcategory{0..20}:
+    name: "<sentence(1)>"
+    category: "@category*"
