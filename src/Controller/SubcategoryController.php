@@ -11,16 +11,24 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-#[Route('/subcategory')]
+#[Route('/api/subcategory')]
 class SubcategoryController extends AbstractController
 {
-    #[Route('/', name: 'app_subcategory_index', methods: ['GET'])]
-    public function index(SubcategoryRepository $subcategoryRepository): Response
+    // #[Route('/', name: 'app_subcategory_index', methods: ['GET'])]
+    // public function indexAPI(SubcategoryRepository $subcategoryRepository): Response
+    // {
+    //     return $this->render('subcategory/index.html.twig', [
+    //         'subcategories' => $subcategoryRepository->findAll(),
+    //     ]);
+    // }
+
+    #[Route('/', name: 'app_subcategory_index', methods: ['GET']) ]
+    public function indexAPI(SubcategoryRepository $subcategoryRepository): Response
     {
-        return $this->render('subcategory/index.html.twig', [
-            'subcategories' => $subcategoryRepository->findAll(),
-        ]);
+        $subcategories = $subcategoryRepository->findAll();
+        return $this->json($subcategories, 200, [], ['groups' => 'allSubcategory',]);
     }
+
 
     #[Route('/new', name: 'app_subcategory_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response

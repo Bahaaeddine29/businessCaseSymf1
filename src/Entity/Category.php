@@ -6,6 +6,7 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
 class Category
@@ -13,12 +14,15 @@ class Category
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['allCategory', 'allSubCategory'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['allCategory', 'allSubCategory'])]
     private ?string $name = null;
 
     #[ORM\OneToMany(mappedBy: 'category', targetEntity: Subcategory::class)]
+    #[Groups(['allCategory'])]
     private Collection $subcategories;
 
     public function __construct()

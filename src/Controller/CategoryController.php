@@ -14,12 +14,13 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/api/category')]
 class CategoryController extends AbstractController
 {
-    #[Route('/', name: 'app_category_index', methods: ['GET'])]
+    #[Route('/', name: 'app_category_index')]
     public function indexAPI(CategoryRepository $categoryRepository): Response
     {
-        $category = $categoryRepository->findAll(); 
-        return $this->json($category, 200, [], ['groups' => 'allCategory']); 
+        $categories = $categoryRepository->findAll();
+        return $this->json($categories, 200, [], ['groups' => 'allCategory']);
     }
+
 
     // #[Route('/new', name: 'app_category_new', methods: ['GET', 'POST'])]
     // public function new(Request $request, EntityManagerInterface $entityManager): Response
@@ -41,12 +42,11 @@ class CategoryController extends AbstractController
     //     ]);
     // }
 
-    #[Route('/{id}', name: 'app_category_show', methods: ['GET'])]
-    public function show(Category $category): Response
+    #[Route('/{id}', name: 'app_category_shwo')]
+    public function shwoAPI($id, CategoryRepository $categoryRepository): Response
     {
-        return $this->render('category/show.html.twig', [
-            'category' => $category,
-        ]);
+        $category = $categoryRepository->find($id);
+        return $this->json($category, 200, [], ['groups' => 'allCategory']);
     }
 
     #[Route('/{id}/edit', name: 'app_category_edit', methods: ['GET', 'POST'])]
