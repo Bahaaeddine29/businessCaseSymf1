@@ -7,6 +7,7 @@ use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -50,21 +51,31 @@ class CategoryController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_category_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Category $category, EntityManagerInterface $entityManager): Response
+    public function editAPI(Request $request, Category $category, EntityManagerInterface $entityManager): Response
     {
+        // Création d'un formulaire de mise à jour en utilisant CategoryType
         $form = $this->createForm(CategoryType::class, $category);
+    
+        // Traitement de la soumission du formulaire
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+    if ($form->isSubmitted() && $form->isValid()) {
+        // Si le formulaire est soumis et valide, mettez à jour la catégorie
+        $entityManager->flush();
 
-            return $this->redirectToRoute('app_category_index', [], Response::HTTP_SEE_OTHER);
-        }
+        // Renvoie une réponse JSON avec un message de succès
+        return new JsonResponse(['message' => 'Catégorie mise à jour avec succès']);
+    }
 
-        return $this->render('category/edit.html.twig', [
-            'category' => $category,
-            'form' => $form,
-        ]);
+    // Récupérez les erreurs de validation du formulaire
+    $errors = [];
+    foreach ($form->getErrors(true) as $error) {
+        $errors[] = $error->getMessage();
+    }
+
+    // Renvoie une réponse JSON avec les erreurs de validation
+    return new JsonResponse(['errors' => $errors], JsonResponse::HTTP_BAD_REQUEST);
+
     }
 
     #[Route('/{id}', name: 'app_category_delete', methods: ['POST'])]

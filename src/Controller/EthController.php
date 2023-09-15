@@ -30,7 +30,7 @@ class EthController extends AbstractController
     }
 
     #[Route('/new', name: 'app_eth_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function newAPI(Request $request, EntityManagerInterface $entityManager): Response
     {
         $eth = new Eth();
         $form = $this->createForm(EthType::class, $eth);
